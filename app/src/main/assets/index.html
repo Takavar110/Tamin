@@ -2,116 +2,381 @@
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>کارپرداز</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>کارپرداز - محاسبات قانون کار و تأمین اجتماعی</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
-    body { background-color: #f8fafc; color: #0f172a; padding: 16px; }
-    .container { max-width: 480px; margin: 0 auto; background: #fff; border-radius: 16px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    h1 { font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
-    .subtitle { font-size: 12px; color: #64748b; margin-bottom: 16px; }
-    .tabs { display: flex; gap: 6px; background: #f1f5f9; padding: 4px; border-radius: 10px; margin-bottom: 16px; }
-    .tab-btn { flex: 1; padding: 9px 2px; border: none; background: transparent; border-radius: 8px; font-size: 12px; font-weight: bold; color: #475569; }
-    .tab-btn.active { background: #fff; color: #2563eb; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+    :root {
+      --primary: #1e3a8a;
+      --primary-light: #3b82f6;
+      --accent: #10b981;
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --border: #334155;
+      --law-bg: rgba(59, 130, 246, 0.1);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, 'Vazirmatn', Tahoma, sans-serif; }
+    body { background-color: var(--bg); color: var(--text); padding-bottom: 30px; }
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #0f172a);
+      padding: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .update-btn {
+      background: #334155;
+      color: #38bdf8;
+      border: 1px solid #475569;
+      padding: 6px 12px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+    .tabs {
+      display: flex;
+      overflow-x: auto;
+      background: #111827;
+      padding: 6px 8px;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+    .tab-btn.active { background: var(--primary-light); color: #fff; font-weight: bold; }
+    .container { padding: 14px; max-width: 600px; margin: 0 auto; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
-    .form-group { margin-bottom: 14px; }
-    label { display: block; font-size: 12px; font-weight: 600; margin-bottom: 6px; color: #334155; }
-    input[type="number"] { width: 100%; padding: 10px; border: 1.5px solid #cbd5e1; border-radius: 8px; font-size: 15px; direction: ltr; text-align: left; }
-    .btn-calc { width: 100%; padding: 12px; background: #2563eb; color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: bold; margin-top: 6px; }
-    .result-box { margin-top: 14px; padding: 12px; border-radius: 8px; background: #f0fdf4; border: 1px solid #86efac; display: none; }
-    .result-val { font-size: 18px; font-weight: 800; color: #16a34a; margin-top: 4px; }
-    .radio-card { display: block; padding: 10px; margin-bottom: 8px; border: 1.5px solid #e2e8f0; border-radius: 8px; font-size: 12px; }
-    .info-alert { margin-top: 12px; padding: 10px; border-radius: 8px; font-size: 12px; line-height: 1.5; }
-    .info-alert.error { background: #fef2f2; color: #991b1b; }
-    .info-alert.warn { background: #fffbeb; color: #92400e; }
-    .info-alert.success { background: #f0fdf4; color: #166534; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 0.8rem; margin-bottom: 4px; color: var(--text-muted); }
+    input, select {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.9rem;
+      outline: none;
+    }
+    input:focus, select:focus { border-color: var(--primary-light); }
+    .calc-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #064e3b;
+      font-weight: 700;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      margin-top: 10px;
+    }
+    .result-box {
+      margin-top: 16px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      display: none;
+    }
+    .result-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      border-bottom: 1px dashed #334155;
+      padding-bottom: 6px;
+    }
+    .result-item:last-child { border-bottom: none; }
+    .result-val { font-weight: bold; color: #38bdf8; }
+    .law-citation {
+      margin-top: 12px;
+      background: var(--law-bg);
+      border-right: 3px solid var(--primary-light);
+      padding: 8px 10px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+    .law-title { font-weight: bold; color: #93c5fd; margin-bottom: 2px; }
+    .status-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-bottom: 8px;
+      background: #065f46;
+      color: #a7f3d0;
+    }
   </style>
 </head>
 <body>
+
+<header>
+  <h1>کارپرداز (قوانین کار و تأمین اجتماعی)</h1>
+  <button class="update-btn" onclick="syncLaws()">بروزرسانی قوانین ↻</button>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab('tab-sanavat')">سنوات</button>
+  <button class="tab-btn" onclick="switchTab('tab-mostamari')">مستمری</button>
+  <button class="tab-btn" onclick="switchTab('tab-bikari')">بیمه بیکاری</button>
+  <button class="tab-btn" onclick="switchTab('tab-rates')">نرخ ۲۳٪ و ۳۰٪</button>
+  <button class="tab-btn" onclick="switchTab('tab-types')">انواع بیمه</button>
+</div>
+
 <div class="container">
-  <h1>⚖️ دستیار محاسبات کار و بیمه</h1>
-  <div class="subtitle">نسخه آفلاین بدون نیاز به اینترنت</div>
 
-  <div class="tabs">
-    <button class="tab-btn active" onclick="switchTab('sanavat')">سنوات</button>
-    <button class="tab-btn" onclick="switchTab('eidi')">عیدی</button>
-    <button class="tab-btn" onclick="switchTab('bimeh')">بیمه بیکاری</button>
-  </div>
-
-  <div id="sanavat" class="tab-content active">
+  <!-- ۱. سنوات -->
+  <div id="tab-sanavat" class="tab-content active">
     <div class="form-group">
-      <label>حقوق پایه ماهانه (تومان):</label>
-      <input type="number" id="sanavat_sal" value="15000000">
+      <label>نوع سنوات:</label>
+      <select id="sanavat_type">
+        <option value="both">هر دو (پایان کار + پایه سنوات ماهانه)</option>
+        <option value="end">صرفاً پاداش پایان کار (ماده ۲۴)</option>
+        <option value="base">صرفاً پایه سنوات ماهانه</option>
+      </select>
     </div>
     <div class="form-group">
-      <label>روزهای کارکرد در سال (۱ تا ۳۶۶):</label>
-      <input type="number" id="sanavat_days" value="365">
-    </div>
-    <button class="btn-calc" onclick="calcSanavat()">محاسبه سنوات</button>
-    <div class="result-box" id="sanavat_res">
-      <div>مبلغ سنوات:</div>
-      <div class="result-val" id="sanavat_val">۰ تومان</div>
-    </div>
-  </div>
-
-  <div id="eidi" class="tab-content">
-    <div class="form-group">
-      <label>حقوق پایه ماهانه (تومان):</label>
-      <input type="number" id="eidi_sal" value="15000000">
+      <label>سال مبنای محاسبه:</label>
+      <select id="sanavat_year">
+        <option value="1404">۱۴۰۴</option>
+        <option value="1403">۱۴۰۳</option>
+        <option value="1402">۱۴۰۲</option>
+      </select>
     </div>
     <div class="form-group">
-      <label>تعداد ماه کارکرد:</label>
-      <input type="number" id="eidi_months" value="12" max="12">
+      <label>آخرین مزد روزانه (ریال):</label>
+      <input type="number" id="sanavat_daily_wage" placeholder="مثلاً ۲,۳۸۸,۷۲۸">
     </div>
-    <button class="btn-calc" onclick="calcEidi()">محاسبه عیدی</button>
-    <div class="result-box" id="eidi_res">
-      <div>حداقل عیدی: <span id="eidi_min" class="result-val" style="font-size:14px;"></span></div>
-      <div style="margin-top:6px;">حداکثر عیدی: <span id="eidi_max" class="result-val" style="font-size:14px;"></span></div>
+    <div class="form-group">
+      <label>تعداد ماه‌های سابقه کار:</label>
+      <input type="number" id="sanavat_months" placeholder="مثلاً ۲۴">
     </div>
+    <button class="calc-btn" onclick="calcSanavat()">محاسبه سنوات قانونی</button>
+
+    <div id="res_sanavat" class="result-box"></div>
   </div>
 
-  <div id="bimeh" class="tab-content">
-    <label>علت قطع همکاری:</label>
-    <label class="radio-card"><input type="radio" name="reason" value="contract" checked> اتمام قرارداد موقت یا اخراج</label>
-    <label class="radio-card"><input type="radio" name="reason" value="resigned"> استعفای داوطلبانه</label>
-    <label style="margin-top:10px; display:block;">سابقه در آخرین کارگاه:</label>
-    <label class="radio-card"><input type="radio" name="history" value="ge1" checked> یک سال و بیشتر</label>
-    <label class="radio-card"><input type="radio" name="history" value="lt1"> کمتر از یک سال</label>
-    <button class="btn-calc" onclick="checkBimeh()">بررسی شرایط</button>
-    <div id="bimeh_res"></div>
+  <!-- ۲. مستمری -->
+  <div id="tab-mostamari" class="tab-content">
+    <div class="form-group">
+      <label>نوع مستمری:</label>
+      <select id="mostamari_type">
+        <option value="retired">بازنشستگی عادی</option>
+        <option value="disability">ازکارافتادگی کلی</option>
+        <option value="survivor">بازماندگان (فوت)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>میانگین دستمزد ماهانه ۲۴ ماه آخر (ریال):</label>
+      <input type="number" id="mostamari_avg_wage" placeholder="مجموع دستمزد ۲ سال تقسیم بر ۲۴">
+    </div>
+    <div class="form-group">
+      <label>مجموع سابقه پرداخت حق‌بیمه (سال):</label>
+      <input type="number" id="mostamari_years" placeholder="مثلاً ۳۰">
+    </div>
+    <button class="calc-btn" onclick="calcMostamari()">محاسبه مستمری استحقاقی</button>
+
+    <div id="res_mostamari" class="result-box"></div>
   </div>
+
+  <!-- ۳. بیمه بیکاری -->
+  <div id="tab-bikari" class="tab-content">
+    <div class="form-group">
+      <label>میانگین دستمزد روزانه ۹۰ روز آخر (ریال):</label>
+      <input type="number" id="bikari_daily_wage" placeholder="مزد مبنای کسر بیمه">
+    </div>
+    <div class="form-group">
+      <label>سابقه بیمه پردازی (ماه):</label>
+      <input type="number" id="bikari_history_months" placeholder="حداقل ۶ ماه">
+    </div>
+    <div class="form-group">
+      <label>وضعیت تأهل و تعداد افراد تحت تکفل:</label>
+      <select id="bikari_dependents">
+        <option value="0">مجرد / بدون تکفل</option>
+        <option value="1">متاهل / ۱ نفر تکفل</option>
+        <option value="2">۲ نفر تحت تکفل</option>
+        <option value="3">۳ نفر تحت تکفل</option>
+        <option value="4">۴ نفر و بیشتر تحت تکفل</option>
+      </select>
+    </div>
+    <button class="calc-btn" onclick="calcBikari()">محاسبه مقرری بیکاری و مدت استحقاق</button>
+
+    <div id="res_bikari" class="result-box"></div>
+  </div>
+
+  <!-- ۴. درصد بیمه ها -->
+  <div id="tab-rates" class="tab-content">
+    <div class="form-group">
+      <label>حقوق و مزایای مشمول بیمه (ریال):</label>
+      <input type="number" id="rate_wage" placeholder="حقوق پایه + بن + مسکن و...">
+    </div>
+    <button class="calc-btn" onclick="calcRates()">تفکیک دقیق سهم‌ها (۳۰٪)</button>
+
+    <div id="res_rates" class="result-box"></div>
+  </div>
+
+  <!-- ۵. انواع بیمه‌ها -->
+  <div id="tab-types" class="tab-content">
+    <div class="form-group">
+      <label>نوع قرارداد بیمه‌ای:</label>
+      <select id="insurance_category" onchange="updateTypeInfo()">
+        <option value="housewife_14">زنان خانه‌دار / دانشجویی (۱۴٪ با احتساب سهم دولت)</option>
+        <option value="housewife_16">زنان خانه‌دار / دانشجویی (۱۶٪ با احتساب سهم دولت)</option>
+        <option value="housewife_20">زنان خانه‌دار / دانشجویی (۲۰٪ با احتساب سهم دولت)</option>
+        <option value="freelance_complete">مشاغل آزاد طرح جدید (۳۰٪ درمان و تعهدات کامل)</option>
+        <option value="optional">بیمه اختیاری (۲۷٪ کامل)</option>
+        <option value="worker">اجباری کارگری (۳۰٪)</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>مبنای دستمزد انتخابی ماهانه (ریال):</label>
+      <input type="number" id="type_wage" placeholder="حداقل دستمزد مصوب سال">
+    </div>
+    <button class="calc-btn" onclick="calcInsuranceTypes()">محاسبه سهم متقاضی و دولت</button>
+
+    <div id="res_types" class="result-box"></div>
+  </div>
+
 </div>
 
 <script>
-  function switchTab(t){
-    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+  // پایگاه داده قوانین پایه (آفلاین)
+  const LAW_DB = {
+    sanavat: {
+      law: "ماده ۲۴ قانون کار",
+      text: "در صورت خاتمه قرارداد، کارفرما مکلف است به کارگری که مطابق قرارداد، یک سال یا بیشتر به کار اشتغال داشته، برای هر سال سابقه معادل یک ماه آخرین مزد به عنوان مزایای پایان کار پرداخت نماید. (برای کمتر از یک سال نیز به نسبت کارکرد تعلق می‌گیرد)."
+    },
+    mostamari: {
+      law: "ماده ۷۷ قانون تأمین اجتماعی",
+      text: "میزان مستمری بازنشستگی عبارت است از یک سی‌ام متوسط مزد یا حقوق بیمه‌شده ضربدر سنوات پرداخت حق بیمه، مشروط بر آنکه از (۳۵/۳۰) متوسط مزد یا حقوق تجاوز ننماید. متوسط مزد بر مبنای مجموع مزد مشمول بیمه در آخرین ۲۴ ماه بیمه‌پردازی تقسیم بر ۲۴ محاسبه می‌شود."
+    },
+    bikari: {
+      law: "ماده ۷ قانون بیمه بیکاری",
+      text: "مقرری روزانه بیمه شده بیکار معادل ۵۵٪ متوسط مزد یا حقوق سه ماه آخر قبل از بیکاری است. به مقرری افراد متاهل یا متکفل تا حداکثر ۴ نفر به ازای هر یک ۱۰٪ افزوده می‌شود، مشروط بر آنکه از حداقل مزد کمتر و از ۸۰٪ متوسط مزد بیشتر نباشد."
+    },
+    rates: {
+      law: "ماده ۲۸ قانون تأمین اجتماعی",
+      text: "حق بیمه سهم کارفرما ۲۰٪، سهم بیمه‌شده ۷٪ و سهم دولت ۳٪ است. بر اساس قانون بیمه بیکاری مصوب ۱۳۶۹، کارفرما مکلف به پرداخت ۳٪ مازاد تحت عنوان بیمه بیکاری است (مجموع سهم کارفرما ۲۳٪)."
+    }
+  };
+
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     event.target.classList.add('active');
-    document.getElementById(t).classList.add('active');
+    document.getElementById(tabId).classList.add('active');
   }
-  function f(n){ return Math.round(n).toLocaleString('fa-IR') + ' تومان'; }
-  function calcSanavat(){
-    let s = +document.getElementById('sanavat_sal').value || 0;
-    let d = +document.getElementById('sanavat_days').value || 0;
-    document.getElementById('sanavat_val').innerText = f(s * (d/365));
-    document.getElementById('sanavat_res').style.display = 'block';
+
+  function formatPrice(n) {
+    return Math.round(n).toLocaleString('fa-IR') + ' ریال';
   }
-  function calcEidi(){
-    let s = +document.getElementById('eidi_sal').value || 0;
-    let m = +document.getElementById('eidi_months').value || 0;
-    document.getElementById('eidi_min').innerText = f((s*2)*(m/12));
-    document.getElementById('eidi_max').innerText = f((s*3)*(m/12));
-    document.getElementById('eidi_res').style.display = 'block';
+
+  // ۱. سنوات
+  function calcSanavat() {
+    const type = document.getElementById('sanavat_type').value;
+    const dailyWage = parseFloat(document.getElementById('sanavat_daily_wage').value) || 0;
+    const months = parseFloat(document.getElementById('sanavat_months').value) || 0;
+    const resBox = document.getElementById('res_sanavat');
+
+    if (dailyWage <= 0 || months <= 0) {
+      alert("لطفاً مبالغ و سوابق را معتبر وارد نمایید.");
+      return;
+    }
+
+    const monthlyWage = dailyWage * 30;
+    const endServiceBenefit = (monthlyWage / 12) * months; // یک ماه به ازای ۱۲ ماه
+
+    let html = `<span class="status-badge">مستند به قانون کار جمهوری اسلامی ایران</span>`;
+    if (type === 'end' || type === 'both') {
+      html += `
+        <div class="result-item">
+          <span>مزایای پایان کار (ماده ۲۴):</span>
+          <span class="result-val">${formatPrice(endServiceBenefit)}</span>
+        </div>
+      `;
+    }
+    if (type === 'base' || type === 'both') {
+      const baseDailyRate1403 = 70000; // ریال روزانه مصوب پایه سنوات سال دوم به بعد
+      const years = Math.floor(months / 12);
+      const approxBase = years > 0 ? (years * baseDailyRate1403 * 30) : 0;
+      html += `
+        <div class="result-item">
+          <span>پایه سنوات تخمینی ماه جاری (سابقه بالای ۱ سال):</span>
+          <span class="result-val">${formatPrice(approxBase)}</span>
+        </div>
+      `;
+    }
+
+    html += `
+      <div class="law-citation">
+        <div class="law-title">${LAW_DB.sanavat.law}</div>
+        <div>${LAW_DB.sanavat.text}</div>
+      </div>
+    `;
+    resBox.innerHTML = html;
+    resBox.style.display = 'block';
   }
-  function checkBimeh(){
-    let r = document.querySelector('input[name="reason"]:checked').value;
-    let h = document.querySelector('input[name="history"]:checked').value;
-    let b = document.getElementById('bimeh_res');
-    if(r==='resigned') b.innerHTML = '<div class="info-alert error">استعفای ارادی شامل بیمه بیکاری نمی‌شود.</div>';
-    else if(h==='lt1') b.innerHTML = '<div class="info-alert warn">در قرارداد موقت نیاز به حداقل ۱ سال سابقه در کارگاه آخر است.</div>';
-    else b.innerHTML = '<div class="info-alert success">شرایط اولیه برقرار است. ظرف ۳۰ روز در سامانه روابط کار اقدام کنید.</div>';
+
+  // ۲. مستمری
+  function calcMostamari() {
+    const avgWage = parseFloat(document.getElementById('mostamari_avg_wage').value) || 0;
+    const years = parseFloat(document.getElementById('mostamari_years').value) || 0;
+    const type = document.getElementById('mostamari_type').value;
+    const resBox = document.getElementById('res_mostamari');
+
+    if (avgWage <= 0 || years <= 0) {
+      alert("لطفاً اطلاعات سابقه و میانگین دستمزد را وارد فرمایید.");
+      return;
+    }
+
+    // فرمول: (متوسط دستمزد * سنوات) / ۳۰
+    let pension = (avgWage * years) / 30;
+    if (years > 35) pension = (avgWage * 35) / 30; // حداکثر طبق ماده ۷۷
+
+    let html = `
+      <span class="status-badge">تطبیق با صندوق تأمین اجتماعی</span>
+      <div class="result-item">
+        <span>مستمری برآوردی ماهانه:</span>
+        <span class="result-val">${formatPrice(pension)}</span>
+      </div>
+      <div class="result-item">
+        <span>ضریب سنواتی اعمال شده:</span>
+        <span class="result-val">${(years/30).toFixed(2)}</span>
+      </div>
+      <div class="law-citation">
+        <div class="law-title">${LAW_DB.mostamari.law}</div>
+        <div>${LAW_DB.mostamari.text}</div>
+      </div>
+    `;
+    resBox.innerHTML = html;
+    resBox.style.display = 'block';
   }
-</script>
-</body>
-</html>
+
+  // ۳. بیمه بیکاری
+  function calcBikari() {
+    const dailyWage = parseFloat(document.getElementById('bikari_daily_wage').value) || 0;
+    const historyMonths = parseFloat(document.getElementById('bikari_history_months').value) || 0;
+    const depCount = parseInt(document.getElementById('bikari_dependents').value) || 0;
+    const resBox = document.getElementById('res_bikari');
+
+    if (dailyWage <= 0 || historyMonths < 6) {
+      alert("حداقل سابقه برای احراز بیمه بیکاری ۶ ماه می‌باشد.");
+      return;
